@@ -1,0 +1,44 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: web-app-deployment
+  namespace: cloud_test
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: web-app
+  template:
+    metadata:
+      labels:
+        app: web-app
+    spec:
+      containers:
+        - name: web-app-container
+          image: web-app:1.01
+          ports:
+            - containerPort: 8000
+          resources:
+            requests:
+              memory: "128Mi"
+              cpu: "250m"
+            limits:
+              memory: "256Mi"
+              cpu: "500m"
+          readinessProbe:
+            httpGet:
+              path: /id
+              port: 8000
+            initialDelaySeconds: 10
+            periodSeconds: 15
+          livenessProbe:
+            httpGet:
+              path: /id
+              port: 8000
+            initialDelaySeconds: 20
+            periodSeconds: 25
+          env:
+            - name: UUID
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.uid

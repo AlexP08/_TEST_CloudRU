@@ -1,0 +1,5 @@
+image:
+  repository: web-app
+  tag: 1.01
+replicaCount: 3
+author: "Alexander_Pavlov"
